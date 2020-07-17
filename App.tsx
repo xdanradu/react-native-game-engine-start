@@ -1,11 +1,11 @@
-import React from "react";
+import React, { PureComponent } from "react";
 import {
   AppRegistry,
   Dimensions,
   StyleSheet,
-  Text,
-  View,
   StatusBar,
+  Button,
+  View,
 } from "react-native";
 import Matter from "matter-js";
 import { GameEngine } from "react-native-game-engine";
@@ -17,7 +17,9 @@ Matter.Common.isElement = () => false;
 const { width, height } = Dimensions.get("screen");
 const boxSize = Math.trunc(Math.max(width, height) * 0.075);
 const engine = Matter.Engine.create({ enableSleeping: false });
+
 const world = engine.world;
+
 const initialBox = Matter.Bodies.rectangle(
   width / 2,
   height / 2,
@@ -26,15 +28,12 @@ const initialBox = Matter.Bodies.rectangle(
 );
 const floor = Matter.Bodies.rectangle(
   width / 2,
-  height - boxSize / 2,
+  -100 + height - boxSize / 2,
   width,
   boxSize,
   { isStatic: true }
 );
 const initialBall = Matter.Bodies.circle(width / 3, height / 3, 5);
-
-// var runner = Matter.Runner.create();
-// Matter.Runner.run(runner, engine);
 
 Matter.World.add(world, [initialBox, initialBall, floor]);
 
@@ -44,45 +43,81 @@ const Physics = (entities, { time }) => {
   return entities;
 };
 
-export default class App extends React.Component {
+export default class App extends PureComponent {
+  ENTITIES = {
+    physics: { engine: engine, world: world },
+    floor: {
+      body: floor,
+      size: [width, boxSize],
+      color: "green",
+      renderer: Box,
+    },
+    initialBox: {
+      body: initialBox,
+      size: [boxSize, boxSize],
+      color: "red",
+      renderer: Box,
+    },
+    initialBall: {
+      body: initialBall,
+      size: [boxSize, boxSize],
+      color: "blue",
+      renderer: Ball,
+    },
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      running: true,
+    };
+  }
+
+  pauseClickHandler = () => {
+    this.refs.gameEngine.stop();
+  };
+
+  resumeClickHandler = () => {
+    this.refs.gameEngine.start();
+  };
+
+  restartClickHandler = () => {
+    console.log("Restart");
+  };
+
   render() {
     return (
-      <GameEngine
-        style={styles.container}
-        systems={[Physics]}
-        entities={{
-          physics: { engine: engine, world: world },
-          floor: {
-            body: floor,
-            size: [width, boxSize],
-            color: "green",
-            renderer: Box,
-          },
-          initialBox: {
-            body: initialBox,
-            size: [boxSize, boxSize],
-            color: "red",
-            renderer: Box,
-          },
-          initialBall: {
-            body: initialBall,
-            size: [boxSize, boxSize],
-            color: "blue",
-            renderer: Ball,
-          },
-        }}
-      >
-        <StatusBar hidden={true} />
-      </GameEngine>
+      <View style={styles.game}>
+        <View style={styles.header}>
+          <Button title="Pause" onPress={this.pauseClickHandler} />
+          <Button title="Resume" onPress={this.resumeClickHandler} />
+          <Button title="Restart" onPress={this.restartClickHandler} />
+        </View>
+        <GameEngine
+          style={styles.container}
+          ref={"gameEngine"}
+          systems={[Physics]}
+          entities={this.ENTITIES}
+        >
+          <StatusBar hidden={true} />
+        </GameEngine>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
+  game: {
+    flexDirection: "column",
   },
+  header: {
+    justifyContent: "center",
+    borderBottomWidth: 5,
+    borderColor: "red",
+    flexDirection: "row",
+    marginTop: 50,
+  },
+  container: {},
 });
 
 AppRegistry.registerComponent("App", () => App);
