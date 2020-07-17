@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@types/matter-js": "^0.14.4",
     "expo": "~38.0.8",
     "expo-status-bar": "^1.0.2",
@@ -16,13 +17,24 @@
     "react-dom": "~16.11.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
     "react-native-game-engine": "^1.2.0",
+=======
+    "expo": "~38.0.8",
+    "expo-status-bar": "^1.0.2",
+    "react": "~16.11.0",
+    "react-dom": "~16.11.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
+>>>>>>> b0d0d9a1e0c8c7f2d4efefc2265548e418b22391
     "react-native-web": "~0.11.7"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
+<<<<<<< HEAD
     "@types/react": "~16.9.41",
     "@types/react-native": "~0.62.13",
     "typescript": "~3.9.5"
+=======
+    "babel-preset-expo": "~8.1.0"
+>>>>>>> b0d0d9a1e0c8c7f2d4efefc2265548e418b22391
   },
   "private": true
 }
